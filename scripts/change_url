@@ -31,6 +31,9 @@ ynh_config_change_url_nginx
 #=================================================
 
 ## do any changes to files that reference specific installation domain/path, i.e. regenerate configs etc
+# $mail is not a stored setting, but the .env template needs it
+mail=$(ynh_user_get_info --username=$admin --key=mail)
+
 ynh_config_add --template=".env" --destination="$install_dir/.env"
 
 chmod 400 "$install_dir/.env"
@@ -41,7 +44,7 @@ chown "$app:$app" "$install_dir/.env"
 #=================================================
 ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemctl --service="$app" --action="start" --wait_until="No requirements found in frontmatter"
+ynh_systemctl --service="$app" --action="start" --wait_until="$startup_marker" --timeout=600
 
 #=================================================
 # END OF SCRIPT

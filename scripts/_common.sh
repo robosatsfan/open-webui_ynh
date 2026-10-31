@@ -17,6 +17,6 @@ check_ssowat_version() {
     local version
     version=$(dpkg-query --show --showformat='${Version}' ssowat)
     if dpkg --compare-versions "$version" lt 12.1.1; then
-        ynh_die "SSOwat $version is too old for this app. Update the system with 'yunohost tools update' and 'yunohost tools upgrade', then try again."
+        ynh_die "SSOwat $version is too old for this app. Update the system with 'yunohost tools update' and 'yunohost tools upgrade system', then try again."
     fi
 }

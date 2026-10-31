@@ -7,6 +7,8 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+check_ssowat_version
+
 upstream_version=$(ynh_read_manifest "version" | cut -d'~' -f1)
 mail=$(ynh_user_get_info --username=$admin --key=mail)
 

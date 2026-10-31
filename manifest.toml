@@ -19,14 +19,14 @@ userdoc = "https://docs.openwebui.com/category/-tutorials"
 code = "https://github.com/open-webui/open-webui"
 
 [integration]
-yunohost = ">= 12.0.9"
+yunohost = ">= 12.1.15"
 helpers_version = "2.1"
 
 architectures = "all"
 multi_instance = false
 
 ldap = true
-sso = false
+sso = true
 
 disk = "10G"
 ram.build = "250M"
@@ -77,10 +77,11 @@ ram.runtime = "2G"
 
     [resources.permissions]
     main.url = "/"
-    # SSOwat would otherwise replace the Authorization header with Basic auth.
-    # Open WebUI then ignores its session cookie on /api/config and hides the
-    # Functions and Tools pages, and API clients lose their Bearer token.
-    main.auth_header = false
+    # SSOwat only passes the logged-in user to the app with this setting. It also
+    # replaces the Authorization header with Basic auth, which would make Open
+    # WebUI ignore its session cookie on /api/config and hide the Functions and
+    # Tools pages, so conf/nginx.conf restores the client's header.
+    main.auth_header = true
 
     [resources.ports]
 

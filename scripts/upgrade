@@ -7,6 +7,8 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
+check_ssowat_version
+
 upstream_version=$(ynh_read_manifest "version" | cut -d'~' -f1)
 
 #=================================================
@@ -20,6 +22,16 @@ ynh_systemctl --service="$app" --action="stop"
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
 ynh_app_setting_set_default --key=rag_embedding_engine --value=""
+
+# Upgrades keep the existing .env, so add the YunoHost SSO settings to it
+if ! grep -q '^WEBUI_AUTH_TRUSTED_EMAIL_HEADER=' "$install_dir/.env"; then
+    cat >> "$install_dir/.env" <<EOF
+
+WEBUI_AUTH_TRUSTED_EMAIL_HEADER=Ynh-User-Email
+WEBUI_AUTH_TRUSTED_NAME_HEADER=Ynh-User
+WEBUI_AUTH_SIGNOUT_REDIRECT_URL='https://$domain/yunohost/sso/'
+EOF
+fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE

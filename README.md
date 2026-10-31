@@ -22,6 +22,83 @@ User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
 ## Screenshots
 ![Screenshot of Open WebUI](./doc/screenshots/openwebui.jpg)
 
+## 🚀 Install this version
+
+This repository is a fork of [YunoHost-Apps/open-webui_ynh](https://github.com/YunoHost-Apps/open-webui_ynh) with Open WebUI 0.12.5 and single sign-on with YunoHost. The changes are on the `update-0.12.5` branch.
+
+> [!WARNING]
+> This is a test version. Single sign-on has not been verified on a live YunoHost server yet, so back up your data before you upgrade.
+
+### Requirements
+
+- YunoHost 12.1.15 or later
+- SSOwat 12.1.1 or later (check with `dpkg -l ssowat`)
+- 10 GB of disk space and 2 GB of RAM
+- Optional: [Ollama](https://apps.yunohost.org/app/ollama) for local models, installed from the YunoHost catalog
+
+### Fresh install
+
+1. Update the system:
+   ```
+   sudo yunohost tools update
+   sudo yunohost tools upgrade system
+   ```
+2. Install the app:
+   ```
+   sudo yunohost app install https://github.com/robosatsfan/open-webui_ynh/tree/update-0.12.5
+   ```
+3. Answer the installation questions: domain, who may access the app, language, admin user and embedding engine. Keep the app private, because visitors without a YunoHost session cannot sign in.
+4. Wait a few minutes for the first start to finish.
+5. Log in to YunoHost and open Open WebUI. You are signed in automatically.
+
+The first user who opens the app becomes the Open WebUI admin, regardless of the admin user chosen during installation. Open the app with your admin account first.
+
+### Upgrade an existing install
+
+1. Back up the app:
+   ```
+   sudo yunohost backup create --apps open-webui
+   ```
+2. If the main permission of the app includes `visitors`, remove it:
+   ```
+   sudo yunohost user permission remove open-webui.main visitors
+   ```
+3. Upgrade the app:
+   ```
+   sudo yunohost app upgrade open-webui -u https://github.com/robosatsfan/open-webui_ynh/tree/update-0.12.5
+   ```
+   If this version is already installed, add `--force`.
+
+## 📝 Release notes
+
+### 0.12.5~ynh1
+
+#### New
+
+- **Single sign-on:** Users who are logged in to YunoHost no longer have to log in to Open WebUI again.
+- **Open WebUI 0.12.5:** The app is updated from 0.11.3.
+
+#### Bug fixes
+
+- **Functions and Tools:** These pages no longer disappear from the interface when the app runs behind YunoHost.
+- **API tokens:** Bearer tokens now reach Open WebUI. Requests without a YunoHost session are still redirected to the portal.
+- **Service start:** The start no longer times out once a tool or function declares requirements.
+- **Change URL:** Changing the domain of the app no longer aborts.
+- **Restore:** The log directory now exists before the service starts, so the service can write its log.
+
+#### Security
+
+- The app now listens on `127.0.0.1` only, so it can be reached only through nginx.
+- Install, upgrade and restore stop with an error if SSOwat is older than 12.1.1. Older versions would allow a client to sign in as any user by faking a login header.
+
+#### Changed behavior
+
+- The Open WebUI login form is no longer shown.
+- Public access is no longer supported, because visitors cannot sign in.
+- Accounts are matched by the main YunoHost email address. If a user's Open WebUI email differs from it, or if it changes later, the user gets a new, empty account.
+- Sign Out now opens the YunoHost portal. To end the session completely, log out of the portal as well.
+- New accounts use the YunoHost username as their name. Users can change it in the Open WebUI settings.
+
 ## 📦 Developer info
 
 [![Automatic tests level](https://apps.yunohost.org/badge/cilevel/open-webui)](https://ci-apps.yunohost.org/ci/apps/open-webui/)

@@ -77,6 +77,10 @@ ram.runtime = "2G"
 
     [resources.permissions]
     main.url = "/"
+    # SSOwat would otherwise replace the Authorization header with Basic auth.
+    # Open WebUI then ignores its session cookie on /api/config and hides the
+    # Functions and Tools pages, and API clients lose their Bearer token.
+    main.auth_header = false
 
     [resources.ports]
 
